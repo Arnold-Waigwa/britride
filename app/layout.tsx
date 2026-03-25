@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { Theme, ThemePanel } from "@radix-ui/themes";
 import Navbar from "./Navbar";
 

@@ -1,11 +1,11 @@
-import { Flex, Text } from "@radix-ui/themes";
-import React from "react";
+import { Flex } from "@radix-ui/themes";
+import Link from "./components/Link";
 
 const Navbar = () => {
   return (
-    <Flex justify="end" gap="3" className="mt-2 pl-7">
-      <Text>Request a ride</Text>
-      <Text>Login</Text>
+    <Flex justify="end" className="mt-2 gap-13  w-[800px] mx-auto">
+      <Link href="/request-a-ride">Request a ride</Link>
+      <Link href="/login">Login</Link>
     </Flex>
   );
 };
