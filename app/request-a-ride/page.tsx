@@ -1,41 +1,44 @@
 "use client";
-import { Flex, Box, TextArea, TextField } from "@radix-ui/themes";
-import React, { useState } from "react";
-import SimpleMDE from "react-simplemde-editor";
+import { Box, Flex, TextField } from "@radix-ui/themes";
 import "easymde/dist/easymde.min.css";
+import { Controller, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 
 //location, description, price
 
-const page = () => {
-  const [data, setData] = useState({ location: "", description: "" });
+type Form = {
+  location: string;
+  description: string;
+  content: string;
+};
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
+const page = () => {
+  const { register, handleSubmit, control } = useForm<Form>();
 
   return (
     <Flex direction="column">
       <Box width="500px" mt="4">
         <TextField.Root
-          placeholder="location..."
           size="3"
-          value={data.location}
-          name="location"
-          onChange={handleChange}
+          placeholder="location..."
+          {...register("location")}
         />
       </Box>
       <Box width="500px" mt="4">
         <TextField.Root
-          placeholder="description..."
           size="3"
-          value={data.description}
-          name="description"
-          onChange={handleChange}
+          placeholder="description..."
+          {...register("description")}
         />
       </Box>
       <Box mt="4">
-        <SimpleMDE placeholder="Testing Simplemde..." />
+        <Controller
+          name="content"
+          control={control}
+          render={({ field }) => (
+            <SimpleMDE placeholder="Testing Simplemde..." {...field} />
+          )}
+        />
       </Box>
     </Flex>
   );
