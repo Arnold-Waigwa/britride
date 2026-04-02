@@ -1,5 +1,6 @@
 import { Flex } from "@radix-ui/themes";
 import RideCard from "./RideCard";
+import Header from "./components/Header";
 
 export default function Home() {
   const rides: { name: string; destination?: string; price: number }[] = [
@@ -10,7 +11,9 @@ export default function Home() {
   return (
     <div>
       <Flex direction="column" justify="center" align="center">
-        <h1 className="text-3xl">Posted Rides</h1>
+        <Header>
+          <h1>Rides</h1>
+        </Header>
         <Flex direction="column" justify="center">
           {rides.map((ride) => (
             <RideCard
