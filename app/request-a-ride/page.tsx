@@ -1,12 +1,11 @@
 "use client";
 import { Box, Button, Flex, TextField } from "@radix-ui/themes";
+import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import ErrorMessage from "../components/ErrorMessage";
 import Header from "../components/Header";
-
-//location, description, price
 
 type Form = {
   location: string;
@@ -24,8 +23,20 @@ const page = () => {
     formState: { errors },
   } = useForm<Form>();
 
-  const onSubmit = (data: Form) => {
-    console.log("submit", data);
+  const onSubmit = async (data: Form) => {
+    //take the data object, send the information with axios to api for database processing
+    try {
+      const response = await axios.post("/api/rides", data);
+
+      if (response.status === 200) {
+        console.log("Ride submitted successfully:", response.data);
+      } else {
+        console.log("Unexpected response:", response.status, response.data);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+
     reset();
   };
 
