@@ -5,28 +5,30 @@ import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import ErrorMessage from "../components/ErrorMessage";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import { RideSchema } from "../ValidationSchema";
+import { useRouter } from "next/navigation";
 
-type Form = {
-  location: string;
-  description: string;
-  content: string;
-  price: number;
-};
+type Form = z.infer<typeof RideSchema>;
 
 const BritForm = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Form>();
+  } = useForm<Form>({ resolver: zodResolver(RideSchema) });
   const onSubmit = async (data: Form) => {
     //take the data object, send the information with axios to api for database processing
     try {
       const response = await axios.post("/api/rides", data);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         console.log("Ride submitted successfully:", response.data);
+        router.refresh();
+        router.push("/");
       } else {
         console.log("Unexpected response:", response.status, response.data);
       }
@@ -40,28 +42,32 @@ const BritForm = () => {
         <Box width="500px" mt="4">
           <TextField.Root
             size="3"
+            placeholder="title..."
+            {...register("title")}
+          />
+          {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
+        </Box>
+        <Box width="500px" mt="4">
+          <TextField.Root
+            size="3"
             placeholder="location..."
-            {...register("location", { required: "location required" })}
+            {...register("location")}
           />
           {errors.location && (
             <ErrorMessage>{errors.location.message}</ErrorMessage>
           )}
         </Box>
-        <Box width="500px" mt="4">
-          <TextField.Root
-            size="3"
-            placeholder="description..."
-            {...register("description")}
-          />
-        </Box>
         <Box mt="4">
           <Controller
-            name="content"
+            name="description"
             control={control}
             render={({ field }) => (
-              <SimpleMDE placeholder="Testing Simplemde..." {...field} />
+              <SimpleMDE placeholder="description..." {...field} />
             )}
           />
+          {errors.description && (
+            <ErrorMessage>{errors.description.message}</ErrorMessage>
+          )}
         </Box>
         <Box mt="4">
           <TextField.Root
@@ -69,9 +75,9 @@ const BritForm = () => {
             placeholder="How much would you like to pay?"
             {...register("price", {
               valueAsNumber: true,
-              min: { value: 0, message: "Must be >= 0" },
             })}
           />
+          {errors.price && <ErrorMessage>{errors.price.message}</ErrorMessage>}
         </Box>
         <Box mt="4">
           <Button className="max-w-2xl w-full">Submit</Button>

@@ -3,7 +3,7 @@ import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const response = await request.json(); //await the request object and jsonify it
+  const response = await request.json(); //parse the json and convert to object
   //validate the request
   const validation = RideSchema.safeParse(response);
 

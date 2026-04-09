@@ -1,17 +1,19 @@
-import { Card, Text } from "@radix-ui/themes";
+import { Card, Flex, Text } from "@radix-ui/themes";
 
 type Props = {
-  name: string;
-  destination?: string;
+  title: string;
+  location: string;
   price: number;
 };
 
-const RideCard = ({ name, destination, price }: Props) => {
+const RideCard = ({ title, location, price }: Props) => {
   return (
-    <Card>
-      <Text>{name}</Text>
-      <Text>{destination}</Text>
-      <Text>{price}</Text>
+    <Card className="w-3xl mb-3">
+      <Flex direction="column" align="center" className="w-auto">
+        <Text>{title}</Text>
+        <Text>{location}</Text>
+        <Text>{price}</Text>
+      </Flex>
     </Card>
   );
 };
