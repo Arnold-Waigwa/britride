@@ -15,6 +15,7 @@ export default async function Home() {
           {rides.map((ride) => (
             <RideCard
               key={ride.id}
+              id={ride.id}
               title={ride.title}
               location={ride.location}
               price={ride.price}
