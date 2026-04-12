@@ -8,9 +8,7 @@ export default async function Home() {
   return (
     <div>
       <Flex direction="column" justify="center" align="center">
-        <Header>
-          <h1>Rides</h1>
-        </Header>
+        <Header>Rides</Header>
         <Flex direction="column" justify="center">
           {rides.map((ride) => (
             <RideCard
