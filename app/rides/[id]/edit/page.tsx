@@ -1,4 +1,6 @@
+import BritForm from "@/app/components/BritForm";
 import Header from "@/app/components/Header";
+import prisma from "@/prisma/client";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -6,9 +8,13 @@ interface Props {
 
 const page = async ({ params }: Props) => {
   const { id } = await params;
+  const ride = await prisma.ride.findUnique({
+    where: { id: parseInt(id) },
+  });
+
   return (
     <div>
-      <Header>{id}</Header>
+      <BritForm ride={ride} />
     </div>
   );
 };

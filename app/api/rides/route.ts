@@ -1,11 +1,11 @@
-import { RideSchema } from "@/app/ValidationSchema";
+import { RideSchemaPost } from "@/app/ValidationSchema";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const response = await request.json(); //parse the json and convert to object
   //validate the request
-  const validation = RideSchema.safeParse(response);
+  const validation = RideSchemaPost.safeParse(response);
 
   //if validation is falsy
   if (!validation.success) {

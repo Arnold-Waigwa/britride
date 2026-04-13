@@ -7,25 +7,43 @@ import SimpleMDE from "react-simplemde-editor";
 import ErrorMessage from "../components/ErrorMessage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { RideSchema } from "../ValidationSchema";
+import { RideSchemaPost } from "../ValidationSchema";
 import { useRouter } from "next/navigation";
+import { Ride } from "@prisma/client";
 
-type Form = z.infer<typeof RideSchema>;
+type Form = z.infer<typeof RideSchemaPost>;
 
-const BritForm = () => {
+interface Props {
+  ride?: Ride | null;
+}
+
+const BritForm = ({ ride }: Props) => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Form>({ resolver: zodResolver(RideSchema) });
+  } = useForm<Form>({
+    resolver: zodResolver(RideSchemaPost),
+    defaultValues: {
+      title: ride?.title,
+      location: ride?.location,
+      description: ride?.description,
+      price: ride?.price,
+    },
+  });
   const onSubmit = async (data: Form) => {
-    //take the data object, send the information with axios to api for database processing
     try {
-      const response = await axios.post("/api/rides", data);
+      let response;
 
-      if (response.status === 201) {
+      if (ride) {
+        response = await axios.patch(`/api/rides/${ride.id}`, data);
+      } else {
+        response = await axios.post("/api/rides", data);
+      }
+
+      if (response.status === 201 || response.status === 200) {
         console.log("Ride submitted successfully:", response.data);
         router.refresh();
         router.push("/");

@@ -1,7 +1,17 @@
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/client";
-import { Text, Grid, Flex, Card, Heading, Badge, Box } from "@radix-ui/themes";
+import {
+  Text,
+  Grid,
+  Flex,
+  Card,
+  Heading,
+  Badge,
+  Box,
+  Button,
+} from "@radix-ui/themes";
 import ReactMarkDown from "react-markdown";
+import Link from "next/link";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -14,9 +24,9 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   return (
-    <Grid columns={{ initial: "1", sm: "5" }} gap="5">
+    <Grid columns={{ initial: "1", sm: "5" }} gap="5" className="mt-5">
       {/* LEFT COLUMN: Main content occupies 4 of the 5 columns on desktop */}
-      <Box className="md:col-span-4">
+      <Box className="md:col-span-3 mr-20">
         <Heading size="8" mb="2">
           {ride.title}
         </Heading>
@@ -39,7 +49,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       </Box>
 
       {/* RIGHT COLUMN: Sidebar (price & future buttons) */}
-      <Box>
+      <Box className="md:col-span-2">
         <Card>
           <Flex direction="column" gap="4">
             <Heading size="4">Details</Heading>
@@ -51,7 +61,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 ${ride.price}
               </Text>
             </Flex>
-            {/* Future placement for Edit/Accept buttons */}
+            <Button>Accept</Button>
+            <Button asChild>
+              <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
+            </Button>
+            {/*To be shown if this post belongs to this user 
+            <Button>Delete</Button>
+            */}
           </Flex>
         </Card>
       </Box>
