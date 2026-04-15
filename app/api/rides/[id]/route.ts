@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
 import { RideSchemaPost } from "@/app/ValidationSchema";
 import prisma from "@/prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
+
 export async function PATCH(request: NextRequest, { params }: Props) {
   const body = await request.json();
 
@@ -38,6 +39,27 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     console.error("error", err);
     return NextResponse.json(
       { error: "Failed to update ride", details: err.message },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest, { params }: Props) {
+  const { id } = await params;
+
+  if (!id) {
+    return NextResponse.json({ error: "No ID provided" }, { status: 400 });
+  }
+
+  try {
+    await prisma.ride.delete({
+      where: { id: parseInt(id) },
+    });
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err: any) {
+    console.log("Error deleting ride", err);
+    return NextResponse.json(
+      { error: "Error deleting ride", details: err.message },
       { status: 500 },
     );
   }
