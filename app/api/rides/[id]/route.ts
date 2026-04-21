@@ -8,7 +8,7 @@ interface Props {
 
 export async function PATCH(request: NextRequest, { params }: Props) {
   const body = await request.json();
-
+  //we can do logic to get the user in sessions or jwt
   //validate the body
   const validate = RideSchemaPost.safeParse(body);
 

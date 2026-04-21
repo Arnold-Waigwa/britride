@@ -62,14 +62,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 ${ride.price}
               </Text>
             </Flex>
-            <Button color="green">Accept</Button>
+            <Button color="green" asChild>
+              <Link href={`something`}>Accept</Link>
+            </Button>
             <Button asChild>
               <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
             </Button>
             <Delete id={ride.id} />
-            {/*To be shown if this post belongs to this user 
-            <Button>Delete</Button>
-            */}
           </Flex>
         </Card>
       </Box>

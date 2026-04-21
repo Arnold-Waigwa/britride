@@ -58,7 +58,7 @@ const Delete = ({ id }: { id: number }) => {
       </AlertDialog.Root>
       <AlertDialog.Root open={error}>
         <AlertDialog.Content>
-          <AlertDialog.Title>Error</AlertDialog.Title>
+          <AlertDialog.Title color="red">Error</AlertDialog.Title>
           <AlertDialog.Description>Error deleting ride</AlertDialog.Description>
           <Button color="gray" onClick={() => setError(false)}>
             OK
