@@ -3,6 +3,7 @@ import { Button } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const Accept = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -14,30 +15,33 @@ const Accept = ({ id }: { id: number }) => {
       const response = await axios.patch(`/api/rides/${id}`, {
         action: "ACCEPT",
       });
-      console.log("Ride Accepted", response.data);
+      toast.success("Ride Accepted", { position: "top-center" });
       // refresh server components / data
       router.refresh();
     } catch (err: any) {
       // inspect common status codes from the accept flow
       const status = err?.response?.status;
-      if (status === 403) console.log("Cannot accept your own ride");
-      else if (status === 404) console.log("Ride not found");
-      else if (status === 409) console.log("Ride already accepted");
-      else console.log("Ride not accepted", err);
+      if (status === 403) toast.error("Cannot accept your own ride");
+      else if (status === 404) toast.error("Ride not found");
+      else if (status === 409) toast.error("Ride already accepted");
+      else toast.error("Ride not accepted", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Button
-      color="green"
-      onClick={handleClick}
-      disabled={isLoading}
-      loading={isLoading}
-    >
-      {isLoading ? "Accepting..." : "Accept"}
-    </Button>
+    <>
+      <Button
+        color="green"
+        onClick={handleClick}
+        disabled={isLoading}
+        loading={isLoading}
+      >
+        {isLoading ? "Accepting..." : "Accepted"}
+      </Button>
+      <Toaster />
+    </>
   );
 };
 
