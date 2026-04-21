@@ -12,7 +12,8 @@ import {
 } from "@radix-ui/themes";
 import ReactMarkDown from "react-markdown";
 import Link from "next/link";
-import Delete from "./edit/Delete";
+import Delete from "../_components/Delete";
+import Accept from "../_components/Accept";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -62,9 +63,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 ${ride.price}
               </Text>
             </Flex>
-            <Button color="green" asChild>
-              <Link href={`something`}>Accept</Link>
-            </Button>
+            <Accept id={ride.id} />
             <Button asChild>
               <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
             </Button>
