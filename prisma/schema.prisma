@@ -19,23 +19,43 @@ enum RideStatus {
 }
 
 model User {
-  id            Int    @id @default(autoincrement())
-  name          String @db.VarChar(255)
-  postedRides   Ride[] @relation("PostedRides")
-  acceptedRides Ride[] @relation("AcceptedRides")
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  postedRides   Ride[]    @relation("PostedRides")
+  acceptedRides Ride[]    @relation("AcceptedRides")
+  sentMessages  Message[]
 }
 
 model Ride {
-  id          Int        @id @default(autoincrement())
-  title       String     @db.VarChar(255)
-  location    String
-  description String     @db.Text
-  price       Float
-  status      RideStatus @default(OPEN)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  posterId    Int
-  poster      User       @relation("PostedRides", fields: [posterId], references: [id])
-  acceptorId  Int?
-  acceptor    User?      @relation("AcceptedRides", fields: [acceptorId], references: [id])
+  id           Int           @id @default(autoincrement())
+  title        String        @db.VarChar(255)
+  location     String
+  description  String        @db.Text
+  price        Float
+  status       RideStatus    @default(OPEN)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  posterId     Int
+  poster       User          @relation("PostedRides", fields: [posterId], references: [id])
+  acceptorId   Int?
+  acceptor     User?         @relation("AcceptedRides", fields: [acceptorId], references: [id])
+  conversation Conversation?
+}
+
+model Conversation {
+  id        Int       @id @default(autoincrement())
+  rideId    Int       @unique
+  ride      Ride      @relation(fields: [rideId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String       @db.Text
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       Int
+  sender         User         @relation(fields: [senderId], references: [id])
+  createdAt      DateTime     @default(now())
 }
