@@ -32,9 +32,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Theme accentColor="purple">
-          <Navbar />
           <main>
-            <Container>{children}</Container>
+            <Container>
+              <Navbar />
+              {children}
+            </Container>
           </main>
         </Theme>
       </body>

@@ -12,7 +12,7 @@ const Accept = ({ id }: { id: number }) => {
   const handleClick = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.patch(`/api/rides/${id}`, {
+      await axios.patch(`/api/rides/${id}`, {
         action: "ACCEPT",
       });
       toast.success("Ride Accepted", { position: "top-center" });
@@ -24,7 +24,7 @@ const Accept = ({ id }: { id: number }) => {
       if (status === 403) toast.error("Cannot accept your own ride");
       else if (status === 404) toast.error("Ride not found");
       else if (status === 409) toast.error("Ride already accepted");
-      else toast.error("Ride not accepted", err);
+      else toast.error("Ride  not accepted", err);
     } finally {
       setIsLoading(false);
     }
