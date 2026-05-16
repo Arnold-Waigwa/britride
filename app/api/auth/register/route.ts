@@ -9,7 +9,7 @@ export async function POST(request: NextRequest){
 
     //if invalid, return error FIRST! (Before trying to use validation.data)
     if (!validation.success) {
-        return NextResponse.json(validation.error, {status: 400})
+        return NextResponse.json(validation.error.format(), {status: 400})
     }
 
     // Now it's safe to extract the data because validation was successful
@@ -23,20 +23,31 @@ export async function POST(request: NextRequest){
 
 
     //otherwise if valid, hash the password using bcrypt and store the new user
-    const hashedPassword = await bcrypt.hash(password, 12)
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hash(password, 12)
+    } catch (e: any) {
+        console.error("BCRYPT ERROR:", e);
+        return NextResponse.json({error: "Failed to hash password", details: e.message}, {status: 500});
+    }
 
     //store the user with hashed credentials
-    const newUser = await prisma.user.create({
-        data: {
-            name,
-            email,
-            password: hashedPassword
-        }
-    });
+    try {
+        const newUser = await prisma.user.create({
+            data: {
+                name,
+                email,
+                password: hashedPassword
+            }
+        });
 
-    // Don't send the password back to the frontend!
-    return NextResponse.json(
-        { id: newUser.id, name: newUser.name, email: newUser.email }, 
-        {status: 201}
-    )
+        // Don't send the password back to the frontend!
+        return NextResponse.json(
+            { id: newUser.id, name: newUser.name, email: newUser.email }, 
+            {status: 201}
+        )
+    } catch (e: any) {
+        console.error("PRISMA CREATE ERROR:", e);
+        return NextResponse.json({error: "Failed to create user", details: e.message}, {status: 500});
+    }
 }
