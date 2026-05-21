@@ -26,22 +26,30 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {label: "Email", type: "email", placeholder: "Jsmith@albion.edu"},
-        password: {label: "Password", type: "password", placeholder: "1234.."}
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "example@albion.edu",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "......",
+        },
       },
-      async authorize(credentials){
+      async authorize(credentials) {
         const validation = LoginSchema.safeParse(credentials);
         if (!validation.success) return null;
 
-        const {email, password} = validation.data;
+        const { email, password } = validation.data;
 
-        const user = await prisma.user.findUnique({where: {email}});
-        
-        if (!user || !user.password) return null; 
+        const user = await prisma.user.findUnique({ where: { email } });
+
+        if (!user || !user.password) return null;
         //if user registered with google: no password set
         //compare passwords
 
-        const passwordMatch = await bcrypt.compare(password, user.password)
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) return null;
 
@@ -50,27 +58,27 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           email: user.email,
           image: user.image,
-        }
-      }
-    })
+        };
+      },
+    }),
   ],
   session: {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({token, user}) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
-    async session({session, token}) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;   
+        session.user.id = token.id as string;
       }
-      return session
-    }
-  }
+      return session;
+    },
+  },
 };
 
 export default authOptions;
