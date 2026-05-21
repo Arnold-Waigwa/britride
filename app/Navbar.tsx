@@ -7,7 +7,7 @@ const Navbar = () => {
       <Link href="/">Home</Link>
       <Flex justify="end" className="mt-2 gap-13 ">
         <Link href="/request-a-ride">Request a ride</Link>
-        <Link href="/">Login</Link>
+        <Link href="/login">Login</Link>
       </Flex>
     </Flex>
   );
