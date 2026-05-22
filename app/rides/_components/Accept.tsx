@@ -38,7 +38,7 @@ const Accept = ({ id }: { id: number }) => {
         disabled={isLoading}
         loading={isLoading}
       >
-        {isLoading ? "Accepting..." : "Accepted"}
+        {isLoading ? "Accepting..." : "Accept"}
       </Button>
       <Toaster />
     </>
