@@ -21,6 +21,8 @@
     "easymde": "^2.20.0",
     "next": "16.2.1",
     "next-auth": "^4.24.14",
+    "pusher": "^5.3.3",
+    "pusher-js": "^8.5.0",
     "radix-ui": "^1.4.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
