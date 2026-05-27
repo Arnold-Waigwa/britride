@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/prisma/client";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth";
 import {
   Text,
   Grid,
@@ -14,16 +16,33 @@ import ReactMarkDown from "react-markdown";
 import Link from "next/link";
 import Delete from "../_components/Delete";
 import Accept from "../_components/Accept";
+import Chat from "./_components/Chat";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
+  // 1. Fetch current logged-in user
+  const session = await getServerSession(authOptions);
+
+  // 2. Fetch the ride AND its conversation + messages
   const ride = await prisma.ride.findUnique({
     where: { id: parseInt(id) },
+    include: {
+      conversation: {
+        include: {
+          messages: {
+            include: {
+              sender: true,
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+        },
+      },
+    },
   });
 
-  if (!ride) {
-    notFound(); // Built in Next.js 404 handler!
-  }
+  if (!ride) return notFound();
 
   return (
     <Grid columns={{ initial: "1", sm: "5" }} gap="5" className="mt-5">
@@ -50,26 +69,40 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         </Card>
       </Box>
 
-      {/* RIGHT COLUMN: Sidebar (price & future buttons) */}
+      {/* RIGHT COLUMN (Sidebar & Chat) */}
       <Box className="md:col-span-2">
-        <Card>
-          <Flex direction="column" gap="4">
-            <Heading size="4">Details</Heading>
-            <Flex justify="between" align="center">
-              <Text size="3" color="gray">
-                Price
-              </Text>
-              <Text size="5" weight="bold">
-                ${ride.price}
-              </Text>
+        <Flex direction="column" gap="5">
+          <Card>
+            <Flex direction="column" gap="4">
+              <Heading size="4">Details</Heading>
+              <Flex justify="between" align="center">
+                <Text size="3" color="gray">
+                  Price
+                </Text>
+                <Text size="5" weight="bold">
+                  ${ride.price}
+                </Text>
+              </Flex>
+              <Accept id={ride.id} />
+              <Button asChild>
+                <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
+              </Button>
+              <Delete id={ride.id} />
             </Flex>
-            <Accept id={ride.id} />
-            <Button asChild>
-              <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
-            </Button>
-            <Delete id={ride.id} />
-          </Flex>
-        </Card>
+          </Card>
+        </Flex>
+        {/* 3. Render the Chat conditionally below the Details card! */}
+        {session?.user && ride.conversation && (
+          <Chat
+            conversationId={ride.conversation.id}
+            currentUserId={parseInt(session.user.id)}
+            // Prisma Date objects to string if passing from Server to Client component
+            initialMessages={ride.conversation.messages?.map((msg) => ({
+              ...msg,
+              createdAt: msg.createdAt.toISOString(),
+            }))}
+          />
+        )}
       </Box>
     </Grid>
   );
