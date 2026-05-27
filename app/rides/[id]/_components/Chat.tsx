@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher/pusherClient"; // Use your new client-only import
 import axios from "axios";
 import { Flex, Card, TextField, Button, Text, Avatar } from "@radix-ui/themes";
+import { PaperPlaneIcon } from "@radix-ui/react-icons";
 
 interface Message {
   id: number;
@@ -83,6 +84,7 @@ export default function Chat({
   return (
     <Card
       size="2"
+      mt="2"
       style={{ height: "400px", display: "flex", flexDirection: "column" }}
     >
       {/* HEADER */}
@@ -146,7 +148,9 @@ export default function Chat({
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
-          <Button disabled={isSending || !newMessage.trim()}>Send</Button>
+          <Button disabled={isSending || !newMessage.trim()}>
+            <PaperPlaneIcon />
+          </Button>
         </Flex>
       </form>
     </Card>
