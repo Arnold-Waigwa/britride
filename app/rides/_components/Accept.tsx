@@ -15,7 +15,9 @@ const Accept = ({ id }: { id: number }) => {
       await axios.patch(`/api/rides/${id}`, {
         action: "ACCEPT",
       });
-      toast.success("Ride Accepted", { position: "top-center" });
+      toast.success("Ride Accepted. Message your customer!", {
+        position: "top-center",
+      });
       // refresh server components / data
       router.refresh();
     } catch (err: any) {

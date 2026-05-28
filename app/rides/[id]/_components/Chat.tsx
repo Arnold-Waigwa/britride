@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { pusherClient } from "@/lib/pusher/pusherClient"; // Use your new client-only import
+import { pusherClient } from "@/lib/pusher/pusherClient";
 import axios from "axios";
 import { Flex, Card, TextField, Button, Text, Avatar } from "@radix-ui/themes";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
@@ -103,40 +103,46 @@ export default function Chat({
         gap="3"
         style={{ flex: 1, overflowY: "auto", padding: "10px 0" }}
       >
-        {messages.map((msg) => {
-          const isMe = msg.senderId === currentUserId;
-          return (
-            <Flex
-              key={msg.id}
-              gap="2"
-              justify={isMe ? "end" : "start"}
-              align="end"
-            >
-              {!isMe && (
-                <Avatar
-                  size="1"
-                  fallback={msg.sender.name![0]}
-                  src={msg.sender.image!}
-                  radius="full"
-                />
-              )}
-
-              <div
-                style={{
-                  backgroundColor: isMe ? "var(--accent-9)" : "var(--gray-3)",
-                  color: isMe ? "white" : "inherit",
-                  padding: "8px 12px",
-                  borderRadius: "16px",
-                  borderBottomRightRadius: isMe ? "0px" : "16px",
-                  borderBottomLeftRadius: !isMe ? "0px" : "16px",
-                  maxWidth: "80%",
-                }}
+        {messages.length === 0 ? (
+          <Text align="center" color="gray" highContrast>
+            Start the conversation with your new customer!
+          </Text>
+        ) : (
+          messages.map((msg) => {
+            const isMe = msg.senderId === currentUserId;
+            return (
+              <Flex
+                key={msg.id}
+                gap="2"
+                justify={isMe ? "end" : "start"}
+                align="end"
               >
-                <Text size="2">{msg.content}</Text>
-              </div>
-            </Flex>
-          );
-        })}
+                {!isMe && (
+                  <Avatar
+                    size="1"
+                    fallback={msg.sender.name![0]}
+                    src={msg.sender.image!}
+                    radius="full"
+                  />
+                )}
+
+                <div
+                  style={{
+                    backgroundColor: isMe ? "var(--accent-9)" : "var(--gray-3)",
+                    color: isMe ? "white" : "inherit",
+                    padding: "8px 12px",
+                    borderRadius: "16px",
+                    borderBottomRightRadius: isMe ? "0px" : "16px",
+                    borderBottomLeftRadius: !isMe ? "0px" : "16px",
+                    maxWidth: "80%",
+                  }}
+                >
+                  <Text size="2">{msg.content}</Text>
+                </div>
+              </Flex>
+            );
+          })
+        )}
       </Flex>
 
       {/* INPUT FORM */}

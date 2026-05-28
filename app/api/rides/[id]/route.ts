@@ -44,10 +44,21 @@ export async function PATCH(request: NextRequest, { params }: Props) {
         );
       }
 
-      // fetch and return the updated ride
-      const updatedRide = await prisma.ride.findUnique({
+      // Automatically create the conversation and link it.
+      // And because we don't pass any messages inside 'create', it starts empty!
+      const updatedRide = await prisma.ride.update({
         where: { id: parseInt(id) },
+        data: {
+          conversation: {
+            create: {},
+          },
+        },
+        include: { conversation: true },
       });
+
+      // TODO: Trigger a Pusher event if you want the frontend to know immediately
+      // e.g. pusherServer.trigger(`ride-${id}`, 'accepted', updatedRide);
+
       return NextResponse.json(updatedRide, { status: 200 });
     } catch (err: any) {
       console.error("accept error", err);
