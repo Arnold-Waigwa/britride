@@ -1,8 +1,15 @@
 import { RideSchemaPost } from "@/app/ValidationSchema";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/auth";
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const response = await request.json(); //parse the json and convert to object
   //validate the request
   const validation = RideSchemaPost.safeParse(response);
@@ -19,7 +26,7 @@ export async function POST(request: NextRequest) {
         description: validation.data.description,
         location: validation.data.location,
         price: validation.data.price,
-        posterId: 1,
+        posterId: parseInt(session.user.id),
       },
     });
     return NextResponse.json(newRide, { status: 201 });
