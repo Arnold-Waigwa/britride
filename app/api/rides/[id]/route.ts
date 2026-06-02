@@ -1,4 +1,5 @@
 import { RideSchemaPost } from "@/app/ValidationSchema";
+import { pusherServer } from "@/lib/pusher/pusherServer";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -57,7 +58,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       });
 
       // TODO: Trigger a Pusher event if you want the frontend to know immediately
-      // e.g. pusherServer.trigger(`ride-${id}`, 'accepted', updatedRide);
+      //Trigger accepted event to client
 
       return NextResponse.json(updatedRide, { status: 200 });
     } catch (err: any) {

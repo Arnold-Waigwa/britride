@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     });
 
     //create event and push to channel
-    const channelName = `conversation-${conversationId}`;
+    const channelName = `private-conversation-${conversationId}`;
     await pusherServer.trigger(channelName, "new-message", newMessage);
 
     //return success

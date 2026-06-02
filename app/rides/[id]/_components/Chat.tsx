@@ -35,7 +35,7 @@ export default function Chat({
   // --- 1. SET UP PUSHER SUBSCRIPTION ---
   useEffect(() => {
     // We bind to the exact channel we made in the API route
-    const channelName = `conversation-${conversationId}`;
+    const channelName = `private-conversation-${conversationId}`;
 
     // Subscribe to that channel
     const channel = pusherClient.subscribe(channelName);
