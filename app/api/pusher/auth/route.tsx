@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
   if (!rideConversation) {
     return NextResponse.json({ error: "Ride does not exist" }, { status: 400 });
   }
+
   if (
     Number(session.user.id) !== rideConversation.ride.posterId &&
     Number(session.user.id) !== rideConversation.ride.acceptorId

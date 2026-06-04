@@ -1,6 +1,8 @@
+import { authOptions } from "@/app/auth";
 import { RideSchemaPost } from "@/app/ValidationSchema";
 import { pusherServer } from "@/lib/pusher/pusherServer";
 import prisma from "@/prisma/client";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Props {
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export async function PATCH(request: NextRequest, { params }: Props) {
+  const session = await getServerSession(authOptions);
   const body = await request.json();
 
   const { id } = await params;
@@ -20,7 +23,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   //if its an accept request, branch out
 
   if (body?.action === "ACCEPT") {
-    const sessionUserId = /* mock for now */ 1;
+    const sessionUserId = Number(session?.user.id);
 
     try {
       // atomic-ish: only update if status is still OPEN (prevents double-accept)

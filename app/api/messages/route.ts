@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
+    console.log(session);
     // 2. Extract data from request body
     const body = await request.json();
     const { content, conversationId } = body;
@@ -30,12 +30,28 @@ export async function POST(request: NextRequest) {
       },
       include: {
         sender: true,
+        conversation: {
+          include: {
+            ride: true,
+          },
+        },
       },
     });
 
+    // Determine the recipient (the person who is NOT the sender)
+    const ride = newMessage.conversation.ride;
+    const recipientId =
+      newMessage.senderId === ride.acceptorId ? ride.posterId : ride.acceptorId;
+
     //create event and push to channel
-    const channelName = `private-conversation-${conversationId}`;
-    await pusherServer.trigger(channelName, "new-message", newMessage);
+    const conversationChannelName = `private-conversation-${conversationId}`;
+    const notificationChannelName = `user-${recipientId}`;
+    await pusherServer.trigger(
+      conversationChannelName,
+      "new-message",
+      newMessage,
+    );
+    await pusherServer.trigger(notificationChannelName, "notification", {});
 
     //return success
     return NextResponse.json(newMessage, { status: 201 });
