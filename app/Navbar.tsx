@@ -1,5 +1,5 @@
 "use client";
-import { Button, Flex, Popover, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import Link from "./components/Link";
 import { useEffect, useState } from "react";
@@ -36,38 +36,55 @@ type NotificationProps = {
 
 const Notification = ({ userId }: NotificationProps) => {
   const channelName = `user-${userId}`;
-  const [haveNotifications, setHaveNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   useEffect(() => {
-    //subscribe to a notification channel
     const channel = pusherClient.subscribe(channelName);
-    //bind to the channel to listen to incoming notifications
     channel.bind("notification", () => {
-      setHaveNotifications(true);
+      setUnreadCount((prev) => prev + 1);
     });
+
     return () => {
       pusherClient.unsubscribe(channelName);
-      pusherClient.unbind("notification");
     };
-  }, []);
+  }, [channelName]);
 
   return (
-    <>
-      {haveNotifications ? (
-        <Popover.Root>
-          <Popover.Trigger>
-            <Button variant="soft" onClick={() => setHaveNotifications(false)}>
-              <MdNotificationAdd />
+    <Popover.Root>
+      <Popover.Trigger>
+        <Button variant="ghost" color="gray" highContrast>
+          <Box position="relative">
+            {unreadCount > 0 ? (
+              <MdNotificationAdd size="22" color="var(--purple-9)" />
+            ) : (
+              <IoIosNotifications size="22" />
+            )}
+            {unreadCount > 0 && (
+              <Badge
+                variant="solid"
+                color="red"
+                radius="full"
+                size="1"
+                style={{ position: "absolute", top: -4, right: -8 }}
+              >
+                {unreadCount}
+              </Badge>
+            )}
+          </Box>
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content width="240px">
+        <Flex direction="column" gap="3">
+          <Text size="2" weight="bold">
+            {unreadCount > 0 ? "You have new messages" : "No new notifications"}
+          </Text>
+          {unreadCount > 0 && (
+            <Button size="1" onClick={() => setUnreadCount(0)}>
+              <Link href={`/myrides/${userId}`}>View Rides</Link>
             </Button>
-          </Popover.Trigger>
-          <Popover.Content>
-            <Text as="p" trim="both" size="1">
-              You have new notifications
-            </Text>
-          </Popover.Content>
-        </Popover.Root>
-      ) : (
-        <IoIosNotifications />
-      )}
-    </>
+          )}
+        </Flex>
+      </Popover.Content>
+    </Popover.Root>
   );
 };
