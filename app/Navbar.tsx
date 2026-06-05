@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher/pusherClient";
 import { IoIosNotifications } from "react-icons/io";
 import { MdNotificationAdd } from "react-icons/md";
+import { toast } from "react-hot-toast";
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -31,23 +32,37 @@ const Navbar = () => {
 export default Navbar;
 
 type NotificationProps = {
-  userId: string;
+  userId: string | number;
 };
 
 const Notification = ({ userId }: NotificationProps) => {
-  const channelName = `user-${userId}`;
+  const messageNotificationChannel = `user-${userId}`;
+  const acceptedNotificationChannel = `accepted-${userId}`;
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    const channel = pusherClient.subscribe(channelName);
-    channel.bind("notification", () => {
+    if (!userId) return;
+
+    const channelNotification = pusherClient.subscribe(
+      messageNotificationChannel,
+    );
+    const channelAccepted = pusherClient.subscribe(acceptedNotificationChannel);
+
+    console.log("subscribing to: ", userId);
+
+    channelNotification.bind("notification", () => {
       setUnreadCount((prev) => prev + 1);
     });
 
+    channelAccepted.bind("accepted", () => {
+      toast.success("Your ride was accepted!");
+    });
+
     return () => {
-      pusherClient.unsubscribe(channelName);
+      pusherClient.unsubscribe(messageNotificationChannel);
+      pusherClient.unsubscribe(acceptedNotificationChannel);
     };
-  }, [channelName]);
+  }, [userId, messageNotificationChannel, acceptedNotificationChannel]);
 
   return (
     <Popover.Root>

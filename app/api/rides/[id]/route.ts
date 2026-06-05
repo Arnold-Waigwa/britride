@@ -62,6 +62,14 @@ export async function PATCH(request: NextRequest, { params }: Props) {
 
       // TODO: Trigger a Pusher event if you want the frontend to know immediately
       //Trigger accepted event to client
+      const channelName = `accepted-${updatedRide.posterId}`;
+      console.log("Triggering on channel:", channelName);
+      console.log(
+        "posterId type:",
+        typeof updatedRide.posterId,
+        updatedRide.posterId,
+      );
+      await pusherServer.trigger(channelName, "accepted", updatedRide);
 
       return NextResponse.json(updatedRide, { status: 200 });
     } catch (err: any) {

@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Container, Theme, ThemePanel } from "@radix-ui/themes";
 import Navbar from "./Navbar";
 import ClientSessionProvider from "./ClientSessionProvider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ClientSessionProvider>
           <Theme accentColor="purple">
+            <Toaster position="top-center" />
             <main>
               <Container>
                 <Navbar />

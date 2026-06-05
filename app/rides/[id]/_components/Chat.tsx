@@ -105,7 +105,7 @@ export default function Chat({
       >
         {messages.length === 0 ? (
           <Text align="center" color="gray" highContrast>
-            Start the conversation with your new customer!
+            Start the conversation!
           </Text>
         ) : (
           messages.map((msg) => {
