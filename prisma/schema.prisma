@@ -18,6 +18,11 @@ enum RideStatus {
   ACCEPTED
 }
 
+enum NotificationType {
+  MESSAGE
+  ACCEPTED_RIDE
+}
+
 model User {
   id            Int       @id @default(autoincrement())
   name          String?   @db.VarChar(255)
@@ -29,9 +34,10 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  postedRides   Ride[]    @relation("PostedRides")
-  acceptedRides Ride[]    @relation("AcceptedRides")
+  postedRides   Ride[]         @relation("PostedRides")
+  acceptedRides Ride[]         @relation("AcceptedRides")
   sentMessages  Message[]
+  notifications Notification[]
 }
 
 model Account {
@@ -101,4 +107,11 @@ model Message {
   senderId       Int
   sender         User         @relation(fields: [senderId], references: [id])
   createdAt      DateTime     @default(now())
+}
+
+model Notification {
+  id     Int              @id @default(autoincrement())
+  kind   NotificationType
+  userId Int
+  user   User             @relation(fields: [userId], references: [id])
 }

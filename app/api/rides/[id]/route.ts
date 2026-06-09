@@ -60,6 +60,10 @@ export async function PATCH(request: NextRequest, { params }: Props) {
         include: { conversation: true },
       });
 
+      await prisma.notification.create({
+        data: { kind: "ACCEPTED_RIDE", userId: updatedRide.posterId },
+      });
+
       // TODO: Trigger a Pusher event if you want the frontend to know immediately
       //Trigger accepted event to client
       const channelName = `accepted-${updatedRide.posterId}`;

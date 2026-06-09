@@ -7,6 +7,7 @@ import { pusherClient } from "@/lib/pusher/pusherClient";
 import { IoIosNotifications } from "react-icons/io";
 import { MdNotificationAdd } from "react-icons/md";
 import { toast } from "react-hot-toast";
+import axios from "axios";
 
 const Navbar = () => {
   const { data: session } = useSession();
