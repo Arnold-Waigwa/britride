@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Use findFirst instead of findUnique because userId might not be unique
-    const notification = await prisma.notification.findFirst({
+    const notification = await prisma.notification.findMany({
       where: { userId: parsedUserId },
       orderBy: { id: "desc" }, // Usually you want the most recent notification
     });

@@ -52,7 +52,9 @@ export async function POST(request: NextRequest) {
       newMessage,
     );
     await pusherServer.trigger(notificationChannelName, "notification", {});
-
+    await prisma.notification.create({
+      data: { kind: "MESSAGE", userId: recipientId! },
+    });
     //return success
     return NextResponse.json(newMessage, { status: 201 });
   } catch (error) {

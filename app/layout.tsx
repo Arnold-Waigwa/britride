@@ -6,6 +6,7 @@ import { Container, Theme, ThemePanel } from "@radix-ui/themes";
 import Navbar from "./Navbar";
 import ClientSessionProvider from "./ClientSessionProvider";
 import { Toaster } from "react-hot-toast";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,17 +34,19 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <ClientSessionProvider>
-          <Theme accentColor="purple">
-            <Toaster position="top-center" />
-            <main>
-              <Container>
-                <Navbar />
-                {children}
-              </Container>
-            </main>
-          </Theme>
-        </ClientSessionProvider>
+        <ReactQueryProvider>
+          <ClientSessionProvider>
+            <Theme accentColor="purple">
+              <Toaster position="top-center" />
+              <main>
+                <Container>
+                  <Navbar />
+                  {children}
+                </Container>
+              </main>
+            </Theme>
+          </ClientSessionProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

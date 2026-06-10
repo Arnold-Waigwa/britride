@@ -8,6 +8,8 @@ import { IoIosNotifications } from "react-icons/io";
 import { MdNotificationAdd } from "react-icons/md";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Notification as NotificationModel } from "@prisma/client";
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -39,11 +41,25 @@ type NotificationProps = {
 const Notification = ({ userId }: NotificationProps) => {
   const messageNotificationChannel = `user-${userId}`;
   const acceptedNotificationChannel = `accepted-${userId}`;
-  const [unreadCount, setUnreadCount] = useState(0);
+  const queryClient = useQueryClient();
+
+  const { data: notifications } = useQuery<NotificationModel[]>({
+    queryKey: ["notifications", userId],
+    queryFn: async () =>
+      await axios
+        .get(`/api/notification?userId=${userId}`)
+        .then((res) => res.data),
+  });
+
+  const hasAcceptedRide = notifications?.some(
+    (n) => n.kind === "ACCEPTED_RIDE",
+  );
+  const hasMessages = notifications?.some((n) => n.kind === "MESSAGE");
+  const notificationCount = notifications?.length || 0;
 
   useEffect(() => {
     if (!userId) return;
-
+    //real time notifications
     const channelNotification = pusherClient.subscribe(
       messageNotificationChannel,
     );
@@ -52,7 +68,9 @@ const Notification = ({ userId }: NotificationProps) => {
     console.log("subscribing to: ", userId);
 
     channelNotification.bind("notification", () => {
-      setUnreadCount((prev) => prev + 1);
+      // Instead of manual state, invalidate the query to fetch the latest from DB
+      queryClient.invalidateQueries({ queryKey: ["notifications", userId] });
+      toast("New message received!", { icon: "💬" });
     });
 
     channelAccepted.bind("accepted", () => {
@@ -63,19 +81,29 @@ const Notification = ({ userId }: NotificationProps) => {
       pusherClient.unsubscribe(messageNotificationChannel);
       pusherClient.unsubscribe(acceptedNotificationChannel);
     };
-  }, [userId, messageNotificationChannel, acceptedNotificationChannel]);
+  }, [
+    userId,
+    messageNotificationChannel,
+    acceptedNotificationChannel,
+    queryClient,
+  ]);
 
   return (
     <Popover.Root>
       <Popover.Trigger>
         <Button variant="ghost" color="gray" highContrast>
           <Box position="relative">
-            {unreadCount > 0 ? (
-              <MdNotificationAdd size="22" color="var(--purple-9)" />
+            {notificationCount > 0 ? (
+              <MdNotificationAdd
+                size="22"
+                // If a ride is accepted, we use a distinct purple,
+                // otherwise a softer gray-purple for messages
+                color={hasAcceptedRide ? "var(--purple-9)" : "var(--purple-8)"}
+              />
             ) : (
               <IoIosNotifications size="22" />
             )}
-            {unreadCount > 0 && (
+            {notificationCount > 0 && (
               <Badge
                 variant="solid"
                 color="red"
@@ -83,7 +111,7 @@ const Notification = ({ userId }: NotificationProps) => {
                 size="1"
                 style={{ position: "absolute", top: -4, right: -8 }}
               >
-                {unreadCount}
+                {notificationCount}
               </Badge>
             )}
           </Box>
@@ -92,10 +120,16 @@ const Notification = ({ userId }: NotificationProps) => {
       <Popover.Content width="240px">
         <Flex direction="column" gap="3">
           <Text size="2" weight="bold">
-            {unreadCount > 0 ? "You have new messages" : "No new notifications"}
+            {hasMessages && hasAcceptedRide
+              ? "New messages & ride updates"
+              : hasMessages
+                ? "You have new messages"
+                : hasAcceptedRide
+                  ? "Your ride was accepted!"
+                  : "No new notifications"}
           </Text>
-          {unreadCount > 0 && (
-            <Button size="1" onClick={() => setUnreadCount(0)}>
+          {notificationCount > 0 && (
+            <Button size="1" asChild>
               <Link href={`/myrides/${userId}`}>View Rides</Link>
             </Button>
           )}
