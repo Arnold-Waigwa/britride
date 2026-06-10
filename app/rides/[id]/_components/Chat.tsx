@@ -19,8 +19,8 @@ interface Message {
 
 interface ChatProps {
   conversationId: number;
-  currentUserId: number; // To differentiate your texts (right) from their texts (left)
-  initialMessages: Message[]; // We can pass existing messages from safety of Prisma server component
+  currentUserId: number;
+  initialMessages: Message[];
 }
 
 export default function Chat({
@@ -32,18 +32,13 @@ export default function Chat({
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  // --- 1. SET UP PUSHER SUBSCRIPTION ---
   useEffect(() => {
-    // We bind to the exact channel we made in the API route
     const channelName = `private-conversation-${conversationId}`;
 
-    // Subscribe to that channel
     const channel = pusherClient.subscribe(channelName);
 
     // Listen for the "new-message" event
     channel.bind("new-message", (incomingMessage: Message) => {
-      // Very Important: Pusher often triggers on BOTH clients (sender and receiver)
-      // So we make sure to update the state with the exact incoming message format.
       setMessages((prev) => {
         // Prevent accidental duplicates in strict mode
         if (prev.some((msg) => msg.id === incomingMessage.id)) return prev;
@@ -54,8 +49,6 @@ export default function Chat({
     // Cleanup: unsubscribe when the component unmounts
     return () => {
       pusherClient.unsubscribe(channelName);
-      // Optional: you can also unbind to be very strict
-      // pusherClient.unbind("new-message");
     };
   }, [conversationId]);
 
@@ -87,7 +80,6 @@ export default function Chat({
       mt="2"
       style={{ height: "400px", display: "flex", flexDirection: "column" }}
     >
-      {/* HEADER */}
       <Text
         weight="bold"
         size="3"
@@ -97,7 +89,6 @@ export default function Chat({
         Ride Chat
       </Text>
 
-      {/* MESSAGES LIST */}
       <Flex
         direction="column"
         gap="3"
@@ -145,7 +136,6 @@ export default function Chat({
         )}
       </Flex>
 
-      {/* INPUT FORM */}
       <form onSubmit={handleSendMessage} style={{ marginTop: "10px" }}>
         <Flex gap="2">
           <TextField.Root

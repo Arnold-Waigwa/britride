@@ -26,7 +26,6 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     const sessionUserId = Number(session?.user.id);
 
     try {
-      // atomic-ish: only update if status is still OPEN (prevents double-accept)
       const result = await prisma.ride.updateMany({
         where: { id: parseInt(id), status: "OPEN" },
         data: { acceptorId: sessionUserId, status: "ACCEPTED" },
@@ -49,7 +48,6 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       }
 
       // Automatically create the conversation and link it.
-      // And because we don't pass any messages inside 'create', it starts empty!
       const updatedRide = await prisma.ride.update({
         where: { id: parseInt(id) },
         data: {
@@ -64,7 +62,6 @@ export async function PATCH(request: NextRequest, { params }: Props) {
         data: { kind: "ACCEPTED_RIDE", userId: updatedRide.posterId },
       });
 
-      // TODO: Trigger a Pusher event if you want the frontend to know immediately
       //Trigger accepted event to client
       const channelName = `accepted-${updatedRide.posterId}`;
       console.log("Triggering on channel:", channelName);

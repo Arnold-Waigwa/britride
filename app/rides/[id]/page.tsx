@@ -67,7 +67,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         <Card variant="surface" className="prose max-w-full">
           <ReactMarkDown>{ride.description}</ReactMarkDown>
         </Card>
-        {/* 3. Render the Chat conditionally below the Details card! */}
         {session?.user && ride.conversation && (
           <Chat
             conversationId={ride.conversation.id}
