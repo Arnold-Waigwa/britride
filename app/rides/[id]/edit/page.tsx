@@ -1,5 +1,4 @@
 import BritForm from "@/app/components/BritForm";
-import Header from "@/app/components/Header";
 import prisma from "@/prisma/client";
 
 interface Props {

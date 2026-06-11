@@ -36,3 +36,34 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User id is required" },
+        { status: 400 },
+      );
+    }
+
+    const parsedUserId = parseInt(userId);
+
+    await prisma.notification.deleteMany({
+      where: { userId: parsedUserId },
+    });
+
+    return NextResponse.json(
+      { message: "Notification deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.log("error deleting comment", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
