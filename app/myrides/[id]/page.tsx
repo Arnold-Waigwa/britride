@@ -6,7 +6,11 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params; //user id
   const myRides = await prisma.user.findUnique({
     where: { id: parseInt(id) },
-    include: { postedRides: true },
+    include: {
+      postedRides: {
+        orderBy: { createdAt: "desc" },
+      },
+    },
   });
   return (
     <Flex direction="column" justify="center" align="center">

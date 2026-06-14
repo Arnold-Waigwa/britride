@@ -4,7 +4,9 @@ import Header from "./components/Header";
 import prisma from "@/prisma/client";
 
 export default async function Home() {
-  const rides = await prisma.ride.findMany();
+  const rides = await prisma.ride.findMany({
+    orderBy: { createdAt: "desc" },
+  });
   return (
     <div>
       <Flex direction="column" justify="center" align="center">

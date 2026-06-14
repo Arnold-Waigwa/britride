@@ -44,6 +44,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (!ride) return notFound();
 
+  const isPoster = ride.posterId === Number(session?.user.id);
+
   return (
     <Grid columns={{ initial: "1", sm: "5" }} gap="5" className="mt-5">
       {/* LEFT COLUMN: Main content occupies 4 of the 5 columns on desktop */}
@@ -93,11 +95,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   ${ride.price}
                 </Text>
               </Flex>
-              <Accept id={ride.id} />
-              <Button asChild>
-                <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
-              </Button>
-              <Delete id={ride.id} />
+              {!isPoster && <Accept id={ride.id} />}
+              {isPoster && (
+                <Button asChild>
+                  <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
+                </Button>
+              )}
+              {isPoster && <Delete id={ride.id} />}
             </Flex>
           </Card>
         </Flex>
