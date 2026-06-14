@@ -57,6 +57,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -65,6 +66,7 @@ model Session {
   userId       Int
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -89,6 +91,11 @@ model Ride {
   acceptorId   Int?
   acceptor     User?         @relation("AcceptedRides", fields: [acceptorId], references: [id])
   conversation Conversation?
+
+  @@index([posterId])
+  @@index([acceptorId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Conversation {
@@ -107,6 +114,9 @@ model Message {
   senderId       Int
   sender         User         @relation(fields: [senderId], references: [id])
   createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([conversationId, createdAt])
 }
 
 model Notification {
@@ -114,4 +124,6 @@ model Notification {
   kind   NotificationType
   userId Int
   user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
