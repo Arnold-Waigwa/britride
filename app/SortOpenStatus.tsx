@@ -23,9 +23,18 @@ const SortOpenStatus = () => {
   return (
     <>
       {openRides ? (
-        <Button onClick={handleClick}>All Rides</Button>
+        <Button onClick={handleClick} variant="soft" color="gray" radius="full">
+          Show All
+        </Button>
       ) : (
-        <Button onClick={handleClick}>Open Rides</Button>
+        <Button
+          onClick={handleClick}
+          variant="surface"
+          color="purple"
+          radius="full"
+        >
+          Filter Open
+        </Button>
       )}
     </>
   );

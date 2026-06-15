@@ -38,11 +38,9 @@ export default function RootLayout({
           <ClientSessionProvider>
             <Theme accentColor="purple">
               <Toaster position="top-center" />
+              <Navbar />
               <main>
-                <Container>
-                  <Navbar />
-                  {children}
-                </Container>
+                <Container>{children}</Container>
               </main>
             </Theme>
           </ClientSessionProvider>

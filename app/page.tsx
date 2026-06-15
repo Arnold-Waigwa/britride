@@ -1,4 +1,4 @@
-import { Flex } from "@radix-ui/themes";
+import { Flex, Container, Heading, Text, Box } from "@radix-ui/themes";
 import RideCard from "./RideCard";
 import Header from "./components/Header";
 import prisma from "@/prisma/client";
@@ -17,24 +17,40 @@ export default async function Home({
     orderBy: { createdAt: "desc" },
   });
   return (
-    <div>
-      <Flex direction="column" justify="center" align="center">
-        <Flex justify="start">
+    <Container size="3">
+      <Flex direction="column" align="center" pt="8" pb="9">
+        <Flex direction="column" align="center" mb="8" gap="2">
+          <Heading size="9" style={{ letterSpacing: "-0.05em" }}>
+            Find your{" "}
+            <span style={{ color: "var(--purple-9)" }}>next journey</span>
+          </Heading>
+          <Text color="gray" size="4">
+            Explore available rides across the city
+          </Text>
+        </Flex>
+
+        <Flex
+          justify="between"
+          align="center"
+          width="100%"
+          mb="6"
+          className="max-w-[600px]"
+        >
+          <Header>Latest Rides</Header>
           <SortOpenStatus />
-          <Header>Rides</Header>
         </Flex>
-        <Flex direction="column" justify="center">
-          {rides.map((ride) => (
-            <RideCard
-              key={ride.id}
-              id={ride.id}
-              title={ride.title}
-              location={ride.location}
-              price={ride.price}
-            />
-          ))}
-        </Flex>
+
+        {rides.map((ride) => (
+          <RideCard
+            key={ride.id}
+            id={ride.id}
+            title={ride.title}
+            location={ride.location}
+            price={ride.price}
+            status={ride.status}
+          />
+        ))}
       </Flex>
-    </div>
+    </Container>
   );
 }
