@@ -3,9 +3,14 @@ import { Flex, Box, Container, Button, Text } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import Notification from "./Notification";
 import Link from "./components/Link";
+import { useAppTheme } from "./ThemeProvider";
+import { MdOutlineLightMode } from "react-icons/md";
+import { MdDarkMode } from "react-icons/md";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const { appearance, toggleTheme } = useAppTheme();
+
   return (
     <Box
       position="sticky"
@@ -53,6 +58,20 @@ const Navbar = () => {
                 >
                   My Rides
                 </Link>
+
+                <Button
+                  variant="ghost"
+                  color="gray"
+                  onClick={toggleTheme}
+                  style={{ cursor: "pointer" }}
+                >
+                  {appearance === "light" ? (
+                    <MdDarkMode size="18" />
+                  ) : (
+                    <MdOutlineLightMode size="18" />
+                  )}
+                </Button>
+
                 <Notification userId={session.user.id} />
                 <Link
                   href="/api/auth/signout"

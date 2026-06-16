@@ -23,7 +23,7 @@ const BritForm = ({ ride }: Props) => {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Form>({
     resolver: zodResolver(RideSchemaPost),
     defaultValues: {
@@ -55,53 +55,57 @@ const BritForm = ({ ride }: Props) => {
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex direction="column">
-        <Box width="500px" mt="4">
+    <Box className="max-w-2xl">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Flex direction="column" gap="4" mt="4">
           <TextField.Root
             size="3"
-            placeholder="title..."
+            placeholder="Enter a descriptive title (e.g., Grocery run in Jackson)"
             {...register("title")}
           />
           {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
-        </Box>
-        <Box width="500px" mt="4">
+
           <TextField.Root
             size="3"
-            placeholder="location..."
+            placeholder="Pickup or meeting point"
             {...register("location")}
           />
           {errors.location && (
             <ErrorMessage>{errors.location.message}</ErrorMessage>
           )}
-        </Box>
-        <Box mt="4">
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <SimpleMDE placeholder="description..." {...field} />
+
+          <Box>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <SimpleMDE
+                  placeholder="Provide details about stops, baggage space, or preferences..."
+                  {...field}
+                />
+              )}
+            />
+            {errors.description && (
+              <ErrorMessage>{errors.description.message}</ErrorMessage>
             )}
-          />
-          {errors.description && (
-            <ErrorMessage>{errors.description.message}</ErrorMessage>
-          )}
-        </Box>
-        <Box mt="4">
+          </Box>
+
           <TextField.Root
             type="number"
-            placeholder="How much would you like to pay?"
+            size="3"
+            placeholder="Suggested Price ($)"
             {...register("price", {
               valueAsNumber: true,
             })}
           />
           {errors.price && <ErrorMessage>{errors.price.message}</ErrorMessage>}
-        </Box>
-        <Box mt="4">
-          <Button className="max-w-2xl w-full">Submit</Button>
-        </Box>
-      </Flex>
-    </form>
+
+          <Button size="3" mt="2" disabled={isSubmitting}>
+            {ride ? "Save Changes" : "Publish Ride"}
+          </Button>
+        </Flex>
+      </form>
+    </Box>
   );
 };
 

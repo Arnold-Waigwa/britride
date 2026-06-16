@@ -47,61 +47,73 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const isPoster = ride.posterId === Number(session?.user.id);
 
   return (
-    <Grid columns={{ initial: "1", sm: "5" }} gap="5" className="mt-5">
+    <Grid columns={{ initial: "1", md: "5" }} gap="6" mt="6">
       {/* LEFT COLUMN: Main content occupies 4 of the 5 columns on desktop */}
-      <Box className="md:col-span-3 mr-20">
-        <Heading size="8" mb="2">
+      <Box className="md:col-span-3">
+        <Heading size="8" weight="bold" mb="2">
           {ride.title}
         </Heading>
 
-        <Flex gap="3" align="center" mb="5">
+        <Flex gap="3" align="center" mb="6">
           <Badge color={ride.status === "OPEN" ? "green" : "ruby"}>
             {ride.status}
           </Badge>
           <Text color="gray" size="2">
-            {ride.createdAt.toDateString()}
+            Posted on {ride.createdAt.toLocaleDateString()}
           </Text>
           <Text color="gray" size="2">
-            📍 {ride.location}
+            <span role="img" aria-label="location">
+              📍
+            </span>{" "}
+            {ride.location}
           </Text>
         </Flex>
 
-        <Card variant="surface" className="prose max-w-full">
+        <Card variant="surface" size="3" className="prose max-w-full">
           <ReactMarkDown>{ride.description}</ReactMarkDown>
         </Card>
+
         {session?.user && ride.conversation && (
-          <Chat
-            conversationId={ride.conversation.id}
-            currentUserId={parseInt(session.user.id)}
-            // Prisma Date objects to string if passing from Server to Client component
-            initialMessages={ride.conversation.messages?.map((msg) => ({
-              ...msg,
-              createdAt: msg.createdAt.toISOString(),
-            }))}
-          />
+          <Box mt="9">
+            <Heading size="5" mb="4">
+              Conversation
+            </Heading>
+            <Chat
+              conversationId={ride.conversation.id}
+              currentUserId={parseInt(session.user.id)}
+              // Prisma Date objects to string if passing from Server to Client component
+              initialMessages={ride.conversation.messages?.map((msg) => ({
+                ...msg,
+                createdAt: msg.createdAt.toISOString(),
+              }))}
+            />
+          </Box>
         )}
       </Box>
+
       {/* RIGHT COLUMN (Sidebar & Chat) */}
       <Box className="md:col-span-2">
         <Flex direction="column" gap="5">
-          <Card>
+          <Card size="4">
             <Flex direction="column" gap="4">
-              <Heading size="4">Details</Heading>
+              <Heading size="4">Trip Details</Heading>
               <Flex justify="between" align="center">
                 <Text size="3" color="gray">
-                  Price
+                  Trip Price
                 </Text>
-                <Text size="5" weight="bold">
+                <Text size="6" weight="bold">
                   ${ride.price}
                 </Text>
               </Flex>
               {!isPoster && <Accept id={ride.id} />}
               {isPoster && (
-                <Button asChild>
-                  <Link href={`/rides/${ride.id}/edit`}>Edit</Link>
-                </Button>
+                <Flex direction="column" gap="3" mt="2">
+                  <Button asChild variant="soft" color="gray" size="3">
+                    <Link href={`/rides/${ride.id}/edit`}>Edit Ride</Link>
+                  </Button>
+                  <Delete id={ride.id} />
+                </Flex>
               )}
-              {isPoster && <Delete id={ride.id} />}
             </Flex>
           </Card>
         </Flex>

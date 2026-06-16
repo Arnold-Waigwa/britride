@@ -25,7 +25,7 @@ export default async function Home({
             <span style={{ color: "var(--purple-9)" }}>next journey</span>
           </Heading>
           <Text color="gray" size="4">
-            Explore available rides across the city
+            Explore available rides
           </Text>
         </Flex>
 
@@ -50,6 +50,11 @@ export default async function Home({
             status={ride.status}
           />
         ))}
+        {rides.length === 0 && (
+          <Text size="4" style={{ color: "var(--purple-9)" }}>
+            No open rides available
+          </Text>
+        )}
       </Flex>
     </Container>
   );

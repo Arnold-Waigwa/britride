@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Container, Theme, ThemePanel } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import Navbar from "./Navbar";
 import ClientSessionProvider from "./ClientSessionProvider";
 import { Toaster } from "react-hot-toast";
 import ReactQueryProvider from "./ReactQueryProvider";
+import ThemeProvider from "./ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,13 +37,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ReactQueryProvider>
           <ClientSessionProvider>
-            <Theme accentColor="purple">
+            <ThemeProvider>
               <Toaster position="top-center" />
               <Navbar />
               <main>
                 <Container>{children}</Container>
               </main>
-            </Theme>
+            </ThemeProvider>
           </ClientSessionProvider>
         </ReactQueryProvider>
       </body>
