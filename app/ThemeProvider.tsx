@@ -17,7 +17,7 @@ export default function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [appearance, setAppearance] = useState<Appearance>("dark");
+  const [appearance, setAppearance] = useState<Appearance>("light");
 
   useEffect(() => {
     const saved = localStorage.getItem("theme") as Appearance;

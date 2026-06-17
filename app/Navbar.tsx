@@ -1,5 +1,14 @@
 "use client";
-import { Flex, Box, Container, Button, Text } from "@radix-ui/themes";
+import {
+  Flex,
+  Box,
+  Container,
+  Button,
+  Text,
+  Select,
+  DropdownMenu,
+  Avatar,
+} from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import Notification from "./Notification";
 import Link from "./components/Link";
@@ -73,12 +82,48 @@ const Navbar = () => {
                 </Button>
 
                 <Notification userId={session.user.id} />
-                <Link
-                  href="/api/auth/signout"
-                  className="text-sm opacity-60 hover:opacity-100 transition-opacity"
-                >
-                  Signout
-                </Link>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger>
+                    <Button
+                      variant="ghost"
+                      style={{
+                        cursor: "pointer",
+                        padding: 0,
+                        borderRadius: "50%",
+                      }}
+                    >
+                      <Avatar
+                        src={session.user.image ?? ""}
+                        fallback={session.user.name?.[0] || "?"}
+                        size="2"
+                        radius="full"
+                        referrerPolicy="no-referrer"
+                      />
+                    </Button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content
+                    variant="soft"
+                    align="end"
+                    sideOffset={10}
+                  >
+                    <DropdownMenu.Label>
+                      <Flex direction="column">
+                        {session.user.name && (
+                          <Text size="2" weight="bold">
+                            {session.user.name}
+                          </Text>
+                        )}
+                        <Text size="1" color="gray">
+                          {session.user.email}
+                        </Text>
+                      </Flex>
+                    </DropdownMenu.Label>
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Item color="red" asChild>
+                      <Link href="/api/auth/signout">Signout</Link>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
               </>
             ) : (
               <Button variant="surface" color="purple" radius="full" asChild>

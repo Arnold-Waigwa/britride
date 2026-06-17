@@ -44,7 +44,9 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (!ride) return notFound();
 
-  const isPoster = ride.posterId === Number(session?.user.id);
+  const canView =
+    ride.posterId === Number(session?.user.id) ||
+    ride.acceptorId === Number(session?.user.id);
 
   return (
     <Grid columns={{ initial: "1", md: "5" }} gap="6" mt="6">
@@ -73,14 +75,14 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
           <ReactMarkDown>{ride.description}</ReactMarkDown>
         </Card>
 
-        {session?.user && ride.conversation && (
+        {canView && ride.conversation && (
           <Box mt="9">
             <Heading size="5" mb="4">
               Conversation
             </Heading>
             <Chat
               conversationId={ride.conversation.id}
-              currentUserId={parseInt(session.user.id)}
+              currentUserId={parseInt(session!.user.id)}
               // Prisma Date objects to string if passing from Server to Client component
               initialMessages={ride.conversation.messages?.map((msg) => ({
                 ...msg,
@@ -105,8 +107,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   ${ride.price}
                 </Text>
               </Flex>
-              {!isPoster && <Accept id={ride.id} />}
-              {isPoster && (
+              {!canView && <Accept id={ride.id} />}
+              {canView && (
                 <Flex direction="column" gap="3" mt="2">
                   <Button asChild variant="soft" color="gray" size="3">
                     <Link href={`/rides/${ride.id}/edit`}>Edit Ride</Link>
