@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.log(session);
     // 2. Extract data from request body
     const body = await request.json();
     const { content, conversationId } = body;

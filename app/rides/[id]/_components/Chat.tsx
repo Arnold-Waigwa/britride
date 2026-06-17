@@ -113,6 +113,7 @@ export default function Chat({
                     size="1"
                     fallback={msg.sender.name![0]}
                     src={msg.sender.image!}
+                    referrerPolicy="no-referrer"
                     radius="full"
                   />
                 )}
