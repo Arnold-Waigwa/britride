@@ -108,7 +108,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </Text>
               </Flex>
               {!canView && <Accept id={ride.id} />}
-              {canView && (
+              {ride.posterId === Number(session?.user.id) && (
                 <Flex direction="column" gap="3" mt="2">
                   <Button asChild variant="soft" color="gray" size="3">
                     <Link href={`/rides/${ride.id}/edit`}>Edit Ride</Link>
