@@ -67,7 +67,7 @@ const BritForm = ({ ride }: Props) => {
 
           <TextField.Root
             size="3"
-            placeholder="Pickup or meeting point"
+            placeholder="Destination"
             {...register("location")}
           />
           {errors.location && (
@@ -80,7 +80,7 @@ const BritForm = ({ ride }: Props) => {
               control={control}
               render={({ field }) => (
                 <SimpleMDE
-                  placeholder="Provide details about stops, baggage space, or preferences..."
+                  placeholder="Provide details about meeting point, stops, baggage space, or preferences..."
                   {...field}
                 />
               )}
