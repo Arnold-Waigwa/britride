@@ -168,7 +168,7 @@ const AuthForm = ({ type }: Props) => {
             className="w-full"
             onClick={() => signIn("google", { callbackUrl: "/" })}
           >
-            Sign in with Google
+            Sign in with your Albion email
           </Button>
 
           <Text align="center" size="2" color="gray" mt="2">
