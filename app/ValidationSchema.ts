@@ -22,6 +22,6 @@ export const LoginSchema = z.object({
     .string()
     .min(1, "Email is required")
     .email({ message: "Invalid email format" })
-    .endsWith("@albion.edu", "You must use an Albion email"),
+    .endsWith("@albion.edu", "You must be an Albion student"),
   password: z.string().min(1, "Password is required"),
 });
