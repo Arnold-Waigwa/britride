@@ -1,0 +1,44 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: '@prisma/extension-accelerate@3.0.1',
+npm warn EBADENGINE   required: { node: '>=22' },
+npm warn EBADENGINE   current: { node: 'v20.14.0', npm: '10.7.0' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'eslint-visitor-keys@5.0.1',
+npm warn EBADENGINE   required: { node: '^20.19.0 || ^22.13.0 || >=24' },
+npm warn EBADENGINE   current: { node: 'v20.14.0', npm: '10.7.0' }
+npm warn EBADENGINE }
+npm error code 1
+npm error path /Users/arnoldwaigwa/Desktop/britride/node_modules/@sentry/cli
+npm error command failed
+npm error command sh -c node ./scripts/install.js
+npm error node:internal/modules/cjs/loader:1148
+npm error   throw err;
+npm error   ^
+npm error
+npm error Error: Cannot find module './url-state-machine'
+npm error Require stack:
+npm error - /Users/arnoldwaigwa/Desktop/britride/node_modules/whatwg-url/lib/public-api.js
+npm error - /Users/arnoldwaigwa/Desktop/britride/node_modules/node-fetch/lib/index.js
+npm error - /Users/arnoldwaigwa/Desktop/britride/node_modules/@sentry/cli/scripts/install.js
+npm error     at Module._resolveFilename (node:internal/modules/cjs/loader:1145:15)
+npm error     at Module._load (node:internal/modules/cjs/loader:986:27)
+npm error     at Module.require (node:internal/modules/cjs/loader:1233:19)
+npm error     at require (node:internal/modules/helpers:179:18)
+npm error     at Object.<anonymous> (/Users/arnoldwaigwa/Desktop/britride/node_modules/whatwg-url/lib/public-api.js:4:24)
+npm error     at Module._compile (node:internal/modules/cjs/loader:1358:14)
+npm error     at Module._extensions..js (node:internal/modules/cjs/loader:1416:10)
+npm error     at Module.load (node:internal/modules/cjs/loader:1208:32)
+npm error     at Module._load (node:internal/modules/cjs/loader:1024:12)
+npm error     at Module.require (node:internal/modules/cjs/loader:1233:19) {
+npm error   code: 'MODULE_NOT_FOUND',
+npm error   requireStack: [
+npm error     '/Users/arnoldwaigwa/Desktop/britride/node_modules/whatwg-url/lib/public-api.js',
+npm error     '/Users/arnoldwaigwa/Desktop/britride/node_modules/node-fetch/lib/index.js',
+npm error     '/Users/arnoldwaigwa/Desktop/britride/node_modules/@sentry/cli/scripts/install.js'
+npm error   ]
+npm error }
+npm error
+npm error Node.js v20.14.0
+
+npm error A complete log of this run can be found in: /Users/arnoldwaigwa/.npm/_logs/2026-07-02T02_03_32_195Z-debug-0.log
