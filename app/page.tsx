@@ -3,6 +3,7 @@ import RideCard from "./RideCard";
 import Header from "./components/Header";
 import prisma from "@/prisma/client";
 import SortOpenStatus from "./SortOpenStatus";
+import { Metadata } from "next";
 
 export default async function Home({
   searchParams,
@@ -20,7 +21,7 @@ export default async function Home({
     <Container size="3">
       <Flex direction="column" align="center" pt="8" pb="9">
         <Flex direction="column" align="center" mb="8" gap="2">
-          <Heading size="9" style={{ letterSpacing: "-0.05em" }}>
+          <Heading size="9" style={{ letterSpacing: "-0.05em" }} align="center">
             Find your{" "}
             <span style={{ color: "var(--purple-9)" }}>next journey</span>
           </Heading>
@@ -59,3 +60,8 @@ export default async function Home({
     </Container>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Discover Rides",
+  description: "Discover available rides",
+};

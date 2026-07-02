@@ -3,13 +3,17 @@ import { Box, Button, Flex, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from "react-hook-form";
-import SimpleMDE from "react-simplemde-editor";
 import ErrorMessage from "../components/ErrorMessage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { RideSchemaPost } from "../ValidationSchema";
 import { useRouter } from "next/navigation";
 import { Ride } from "@prisma/client";
+import dynamic from "next/dynamic";
+
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 type Form = z.infer<typeof RideSchemaPost>;
 

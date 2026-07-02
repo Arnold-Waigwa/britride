@@ -2,6 +2,7 @@ import Header from "@/app/components/Header";
 import RideCard from "@/app/RideCard";
 import prisma from "@/prisma/client";
 import { Box, Container, Flex, Heading, Text } from "@radix-ui/themes";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -35,53 +36,60 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         </Flex>
 
         {/* Posted Rides Section */}
-        <Box width="100%" mb="8" className="max-w-[600px]">
-          <Header>Posted by me</Header>
-          <Box mt="4">
-            {user.postedRides.length > 0 ? (
-              user.postedRides.map((ride) => (
-                <RideCard
-                  key={ride.id}
-                  id={ride.id}
-                  location={ride.location}
-                  price={ride.price}
-                  title={ride.title}
-                  status={ride.status}
-                />
-              ))
-            ) : (
-              <Text color="gray" size="2">
-                You haven't posted any rides yet.
-              </Text>
-            )}
+        <Flex direction="column" align="center">
+          <Box width="100%" mb="8" className="max-w-[600px]">
+            <Header>Posted by me</Header>
+            <Box mt="4">
+              {user.postedRides.length > 0 ? (
+                user.postedRides.map((ride) => (
+                  <RideCard
+                    key={ride.id}
+                    id={ride.id}
+                    location={ride.location}
+                    price={ride.price}
+                    title={ride.title}
+                    status={ride.status}
+                  />
+                ))
+              ) : (
+                <Text color="gray" size="2">
+                  You haven't posted any rides yet.
+                </Text>
+              )}
+            </Box>
           </Box>
-        </Box>
 
-        {/* Accepted Rides Section */}
-        <Box width="100%" className="max-w-[600px]">
-          <Header>Rides I've Accepted</Header>
-          <Box mt="4">
-            {user.acceptedRides.length > 0 ? (
-              user.acceptedRides.map((ride) => (
-                <RideCard
-                  key={ride.id}
-                  id={ride.id}
-                  location={ride.location}
-                  price={ride.price}
-                  title={ride.title}
-                  status={ride.status}
-                />
-              ))
-            ) : (
-              <Text color="gray" size="2">
-                You haven't accepted any rides yet.
-              </Text>
-            )}
+          {/* Accepted Rides Section */}
+          <Box width="100%" className="max-w-[600px]">
+            <Header>Rides I've Accepted</Header>
+            <Box mt="4">
+              {user.acceptedRides.length > 0 ? (
+                user.acceptedRides.map((ride) => (
+                  <RideCard
+                    key={ride.id}
+                    id={ride.id}
+                    location={ride.location}
+                    price={ride.price}
+                    title={ride.title}
+                    status={ride.status}
+                  />
+                ))
+              ) : (
+                <Text color="gray" size="2">
+                  You haven't accepted any rides yet.
+                </Text>
+              )}
+            </Box>
           </Box>
-        </Box>
+        </Flex>
       </Flex>
     </Container>
   );
 };
 
 export default page;
+
+export const metadata: Metadata = {
+  title: "View My Rides",
+  description: "View rides requested or accepted by me",
+};

@@ -1,4 +1,4 @@
-import { pusherClient } from "@/lib/pusher/pusherClient";
+import { getPusherClient } from "@/lib/pusher/pusherClient";
 import {
   Badge,
   Box,
@@ -61,6 +61,7 @@ const Notification = ({ userId }: NotificationProps) => {
   useEffect(() => {
     if (!userId) return;
     //real time notifications
+    const pusherClient = getPusherClient();
     const channelNotification = pusherClient.subscribe(
       messageNotificationChannel,
     );

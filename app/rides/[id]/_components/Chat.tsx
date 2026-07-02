@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { pusherClient } from "@/lib/pusher/pusherClient";
+import { getPusherClient } from "@/lib/pusher/pusherClient";
 import axios from "axios";
 import { Flex, Card, TextField, Button, Text, Avatar } from "@radix-ui/themes";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
@@ -34,7 +34,7 @@ export default function Chat({
 
   useEffect(() => {
     const channelName = `private-conversation-${conversationId}`;
-
+    const pusherClient = getPusherClient();
     const channel = pusherClient.subscribe(channelName);
 
     // Listen for the "new-message" event

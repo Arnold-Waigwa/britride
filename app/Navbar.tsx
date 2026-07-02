@@ -1,20 +1,18 @@
 "use client";
 import {
-  Flex,
-  Box,
-  Container,
-  Button,
-  Text,
-  Select,
-  DropdownMenu,
   Avatar,
+  Box,
+  Button,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text,
 } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
-import Notification from "./Notification";
+import { MdDarkMode, MdOutlineLightMode } from "react-icons/md";
 import Link from "./components/Link";
+import Notification from "./Notification";
 import { useAppTheme } from "./ThemeProvider";
-import { MdOutlineLightMode } from "react-icons/md";
-import { MdDarkMode } from "react-icons/md";
 
 const Navbar = () => {
   const { data: session } = useSession();
