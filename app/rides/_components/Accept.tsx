@@ -3,7 +3,7 @@ import { Button } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const Accept = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -15,9 +15,7 @@ const Accept = ({ id }: { id: number }) => {
       await axios.patch(`/api/rides/${id}`, {
         action: "ACCEPT",
       });
-      toast.success("Ride Accepted. Message your customer!", {
-        position: "top-center",
-      });
+      toast.success("Ride Accepted. Message your customer!");
       // refresh server components / data
       router.refresh();
     } catch (err: any) {
@@ -42,7 +40,6 @@ const Accept = ({ id }: { id: number }) => {
       >
         {isLoading ? "Accepting..." : "Accept"}
       </Button>
-      <Toaster />
     </>
   );
 };
