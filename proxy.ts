@@ -11,6 +11,6 @@ export const config = {
     /*
      * Match all request paths except for static assets and auth pages
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|login|register).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|login|register|monitoring).*)",
   ],
 };
