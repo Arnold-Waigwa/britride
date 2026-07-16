@@ -15,6 +15,7 @@ declare module "next-auth" {
 }
 
 import { DefaultSession } from "next-auth";
+import { error } from "next/dist/build/output/log";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -52,6 +53,10 @@ export const authOptions: NextAuthOptions = {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) return null;
+
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email before signing in");
+        }
 
         return {
           id: String(user.id),

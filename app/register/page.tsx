@@ -1,6 +1,5 @@
-import React from "react";
-import AuthForm from "../components/AuthForm";
 import { Metadata } from "next";
+import AuthForm from "../components/AuthForm";
 
 const page = () => {
   return <AuthForm type="Register" />;

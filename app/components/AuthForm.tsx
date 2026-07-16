@@ -29,6 +29,8 @@ interface Props {
 type Form = z.infer<typeof RegisterSchema>;
 
 const AuthForm = ({ type }: Props) => {
+  const [registered, setRegistered] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
   const isLogin = type === "Login";
@@ -59,12 +61,34 @@ const AuthForm = ({ type }: Props) => {
       } else {
         //register logic
         await axios.post("/api/auth/register", data);
-        router.push("/");
+        setSubmittedEmail(data.email);
+        setRegistered(true);
       }
     } catch (error: any) {
       setError(error.response?.data?.error || "An unexpected error occurred.");
     }
   };
+  if (registered) {
+    return (
+      <div
+        style={{
+          maxWidth: 400,
+          margin: "80px auto",
+          padding: 24,
+          textAlign: "center",
+        }}
+      >
+        <h2>Check your email</h2>
+        <p>
+          We sent a verification link to <strong>{submittedEmail}</strong>.
+        </p>
+        <p style={{ color: "#666", fontSize: 14 }}>
+          Click the link in the email to activate your account, then come back
+          to sign in.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="max-w-md mx-auto mt-10 p-5">
       <Card className="shadow-lg">

@@ -2,6 +2,8 @@ import { RegisterSchema } from "@/app/ValidationSchema";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   const body = await request.json(); //extract the request body
@@ -45,15 +47,24 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    await prisma.verificationToken.create({
+      data: { identifier: email, token, expires },
+    });
+
+    await sendVerificationEmail(email, token);
+
     return NextResponse.json(
       { id: newUser.id, name: newUser.name, email: newUser.email },
       { status: 201 },
     );
   } catch (e: any) {
     console.error("PRISMA CREATE ERROR:", e);
-    return NextResponse.json(
-      { error: "Failed to create user", details: e.message },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      ok: true,
+      message: "Check your email to verify your account",
+    });
   }
 }
