@@ -1,14 +1,8 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendVerificationEmail(email: string, token: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const verifyUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}`;
-
-  console.log("Sending email to:", email);
-  console.log("From:", process.env.EMAIL_FROM);
-  console.log("RESEND_API_KEY set:", !!process.env.RESEND_API_KEY);
-  console.log("Verify URL:", verifyUrl);
 
   const { data, error } = await resend.emails.send({
     from: process.env.EMAIL_FROM!,
@@ -30,11 +24,4 @@ export async function sendVerificationEmail(email: string, token: string) {
       </div>
     `,
   });
-
-  console.log("Resend response data:", data);
-  console.log("Resend response error:", error);
-
-  if (error) {
-    throw new Error(`Email failed: ${JSON.stringify(error)}`);
-  }
 }
