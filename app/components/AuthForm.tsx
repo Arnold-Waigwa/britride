@@ -48,7 +48,8 @@ const AuthForm = ({ type }: Props) => {
       if (isLogin) {
         //login logic
         result = await signIn("credentials", {
-          redirect: false,
+          redirect: true,
+          callbackUrl: "/",
           email: data.email,
           password: data.password,
         });
