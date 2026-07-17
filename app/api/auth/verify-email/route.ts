@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
 
   if (!token) {
     return NextResponse.redirect(
-      new URL("/login?error=missing-token", req.url),
+      new URL(new URL(`${process.env.NEXTAUTH_URL}/login?error=missing-token`)),
     );
   }
 
@@ -16,14 +16,14 @@ export async function GET(req: NextRequest) {
 
   if (!verificationToken) {
     return NextResponse.redirect(
-      new URL("/login?error=invalid-token", req.url),
+      new URL(new URL(`${process.env.NEXTAUTH_URL}/login?error=invalid-token`)),
     );
   }
 
   if (verificationToken.expires < new Date()) {
     await prisma.verificationToken.delete({ where: { token } });
     return NextResponse.redirect(
-      new URL("/login?error=expired-token", req.url),
+      new URL(new URL(`${process.env.NEXTAUTH_URL}/login?error=expired-token`)),
     );
   }
 
@@ -36,5 +36,7 @@ export async function GET(req: NextRequest) {
   // Clean up the token
   await prisma.verificationToken.delete({ where: { token } });
 
-  return NextResponse.redirect(new URL("/login?verified=true", req.url));
+  return NextResponse.redirect(
+    new URL(`${process.env.NEXTAUTH_URL}/login?verified=true`),
+  );
 }
