@@ -56,6 +56,7 @@ const AuthForm = ({ type }: Props) => {
         if (result?.error) {
           setError("Invalid Username or Password");
         } else if (result?.ok) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
           router.refresh();
           router.push("/");
         }
