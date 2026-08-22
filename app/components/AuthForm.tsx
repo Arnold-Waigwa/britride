@@ -53,13 +53,11 @@ const AuthForm = ({ type }: Props) => {
           email: data.email,
           password: data.password,
         });
-        console.log("Full result:", JSON.stringify(result));
-        console.log("result.ok:", result?.ok);
-        console.log("result.error:", result?.error);
         if (result?.error) {
           setError("Invalid Username or Password");
         } else if (result?.ok) {
           router.refresh();
+          router.push("/");
           window.location.href = "/";
         }
       } else {
