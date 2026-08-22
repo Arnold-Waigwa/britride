@@ -57,7 +57,7 @@ const AuthForm = ({ type }: Props) => {
           setError("Invalid Username or Password");
         } else if (result?.ok) {
           router.refresh();
-          window.location.href = "/";
+          router.push("/");
         }
       } else {
         //register logic
